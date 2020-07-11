@@ -1,0 +1,77 @@
+/*继承*/
+//多个类存在相同属性和行为时，将这些内容抽取到单独一个类中，那么多个类就不需要再定义这些属性和行为，只需要继承那个类即可。
+//语法：class Subclass extends Superclass{}
+//不要仅为了获取其他类中的某个功能而去继承
+//子类不是父类的子集，而是父类的扩展
+//子类不能访问父类的私有属性和私有方法。
+//实例
+//父类
+public class Person{
+	int age;
+	String name;
+	String sex;
+	public void showInfo(){
+		System.cou.printfln(age);
+		System.cou.printfln(sex);
+		System.cou.printfln(name);
+	} 
+}
+//子类 
+public class Student extends Person{//用关键字extends实现继承
+	String school;
+	public void showInfo(){
+		System.cou.printfln(age);
+		System.cou.printfln(sex);
+		System.cou.printfln(name);
+		System.cou.printfln(school);
+	}
+}
+
+/*方法的重写*/
+//子类重写父类的方法，只是重写编写方法体的代码
+//子类不能重写父类的私有方法
+//如果父类的方法是public,子类重写时不能为缺省
+//重写的快捷键"alt+/"
+//实例
+public class Student extends Person{
+	String school;
+	//重写需要加"@Override"
+	@Override
+	public void showInfo(){
+		System.cou.printfln("对父类中的showInfo方法进行重写");
+		System.cou.printfln(age);
+		System.cou.printfln(sex);
+		System.cou.printfln(name);
+		System.cou.printfln(school);
+	}
+}
+//重载：一个类可以有多个同名方法
+//重写：子类可以重新写父类的方法，覆盖父类的方法
+
+
+/*instanceof操作符*/
+//判断对象的类型是否属于某个类
+//子类对象属于父类类型
+//父类对象不属于子类类型
+//返回值为布尔类型
+x instanceof A //判断x对象是否属于A类类型
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

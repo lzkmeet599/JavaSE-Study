@@ -1,0 +1,312 @@
+/*反射-Java Reflection*/
+//现在，给jvm一个类名，能不能知道类的具体信息呢？能
+//反射机制，就是通过一个抽象的类名能够在自己记忆（加载类的内存）中找到相匹配的类的具体信息
+//前提：jvm已经加载这个类，相当于人脑有了这个类的记忆
+//已经加载过这个类 就可以通过类名来寻找这个类的相关信息
+//Reflection（反射）是被视为动态语言的关键，反射机制允许程序在执行期借助于Reflection API取得任何类的内部信息，并能直接操作任意对象的内部属性及方法
+//实例讲解
+package date20200709;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+
+public class Test1 {
+	public static void main(String[] args) {
+		try {
+			Class clazz = Class.forName("date20200709.Student");
+			
+			Class superClass = clazz.getSuperclass();//获取父类
+			System.out.println("父类"+superClass);
+			
+			Class[] interfacesClasses = clazz.getInterfaces();//获取接口
+			for (Class class1 : interfacesClasses) {
+				System.out.println("接口"+class1.getName());
+			}
+			
+//			Constructor cons= clazz.getConstructor();//获取类的无参构造方法
+			Constructor[] cons= clazz.getConstructors();//获取类的所有公有构造方法 
+			for (Constructor constructor : cons) {
+				System.out.println("-------------------------------");
+				System.out.println("构造方法"+constructor.getName());//获取方法名
+				//返回数字1表示public
+				System.out.println("构造方法的修饰符是"+constructor.getModifiers());//获取构造方法的修饰符
+				Class[] paramclazz = constructor.getParameterTypes();//获取构造方法的参数类型 有几个就返回几个类型
+				for (Class pc : paramclazz) {
+					System.out.println("构造方法"+constructor.getName()+"的参数类型是"+pc.getName());
+				}
+				
+			}
+			
+			Constructor[] cons1= clazz.getDeclaredConstructors();//获取类的所有构造方法 包括公有私有
+			for (Constructor constructor : cons1) {
+				System.out.println("-------------------------------");
+				System.out.println("构造方法"+constructor.getName());//获取方法名
+				//返回数字1表示public 数字2表示private
+				System.out.println("构造方法的修饰符是"+constructor.getModifiers());//获取构造方法的修饰符
+				Class[] paramclazz = constructor.getParameterTypes();//获取构造方法的参数类型 有几个就返回几个类型
+				for (Class pc : paramclazz) {
+					System.out.println("构造方法"+constructor.getName()+"的参数类型是"+pc.getName());
+				}
+			}
+			
+			//如果用反射的构造方法创建对象
+			Object obj=clazz.newInstance();//调用的是无参公有构造方法
+			Student student=(Student)obj;
+			System.out.println(student.school);
+			
+			Constructor cons2 =clazz.getConstructor(String.class);//指定获取有一个参数且为string类型的公有构造方法
+			Student student1=(Student)cons2.newInstance("第一中学");//通过newInstances实例化对象，相当于调用public Student(String school) 构造方法并赋值"第一中学"
+			System.out.println(student1.school);
+				
+			//通过反射机制强制调用私有构造方法
+			Constructor cons3=clazz.getDeclaredConstructor(String.class,int.class);//指定获取有两个参数的私有构造
+			cons3.setAccessible(true);//解除私有的封装   下面就可以对私有的构造方法强制调用
+			Student student2 = (Student)cons3.newInstance("张三",12);
+			System.out.println(student2.name+"年龄为"+student2.age);
+			
+				
+			Method[] ms=clazz.getMethods();//获取到类的所有公有方法
+//			Method[] ms=clazz.getDeclaredMethods();//获取到类的所有私有公有方法
+			for (Method method : ms) {
+				System.out.println("方法名:"+method.getName());//获取方法名
+				System.out.println("返回类型:"+method.getReturnType());
+				System.out.println("修饰符:"+method.getModifiers());
+				
+				//获取参数
+				Class[] pcs = method.getParameterTypes();
+				if(pcs!=null&&pcs.length>0) {
+					for (Class pc : pcs) {
+						System.out.println("参数类型："+pc.getName());
+					}
+				}
+				System.out.println("******************");
+			}
+			
+			Field[] fs = clazz.getFields();//获取类的公有属性 包含了父类的公有属性
+//			Field[] fs = clazz.getDeclaredFields();//获取类（不包括父类）的所有属性 包括私有
+			
+			for (Field f : fs) {
+				System.out.println("修饰符"+f.getModifiers());
+				System.out.println("属性的类型"+f.getType());
+				System.out.println("属性的名称"+f.getName());
+				
+			}
+			
+			Package p = clazz.getPackage();//获取类所在的包
+			System.out.println(p.getName());
+			
+			/**
+			 * 注意 下面不论是反射调用setInfo方法还是test方法
+			 * 都调用的是obj1对象的方法，实际上就是student的方法
+			 */
+			Constructor cons4= clazz.getConstructor();//获取类的无参构造方法 
+			Object obj1 = cons4.newInstance();//使用无参构造函数实例化对象
+			Method m = clazz.getMethod("setInfo", String.class,String.class);//获取名称叫做setInfo，参数为string的方法
+			m.invoke(obj1, "张三","实验中学");//参数1是实例化对象 参数2是当前调用方法的实际参数
+			
+			//如果要调用私有方法
+			Method m1= clazz.getDeclaredMethod("test", String.class);
+			m1.setAccessible(true);//解除私有封装  下面就可以对私有的构造方法强制调用
+			m1.invoke(obj1, "李四");
+			
+			//调用一个重载方法
+			Method m2 = clazz.getMethod("setInfo", int.class);//获取名称叫做setInfo，参数为int的方法
+			m2.invoke(obj1,12);//参数1是实例化对象 参数2是当前调用方法的实际参数
+			
+			//调用有返回值的方法
+			Method m3 = clazz.getMethod("getSchool");//获取名称叫做getSchool，参数为int的方法
+			String school= (String)m3.invoke(obj1);//调用有返回值没有参数的方法
+			System.out.println(school);
+			
+			/**
+			 * 获取指定属性
+			 */
+			//反射创建一个对象
+			Constructor cons5= clazz.getConstructor();//获取类的无参构造方法 
+//			Object obj2 = cons4.newInstance();//使用无参构造函数实例化对象
+			//上面的语句也可以替换成下面的语句
+			Student student4= (Student)cons5.newInstance();
+			
+			Field f = clazz.getField("school");//获取名称为school的属性
+			
+			f.set(student4, "第一中学");//对student4对象的school属性赋值
+			String school1 = (String)f.get(student4);//获取student4对象的school属性的值
+			System.out.println(school);
+			
+			//如果是私有属性
+			Field f2 = clazz.getDeclaredField("privateField");//获取名称为privateField的私有属性
+			f2.setAccessible(true);//解除私有封装  下面就可以对私有的构造方法强制调用
+			f.set(student4, "私有属性赋值");//对student4对象的school属性赋值
+			String privateField = (String)f.get(student4);//获取student4对象的school属性的值
+			System.out.println(privateField);
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+}
+
+------------------------------------------------------------------------
+package date20200709;
+
+public class Student extends Person implements Move,Study {
+
+	public Student() {
+		System.out.println("调用的是无参构造函数public Student()");
+	}
+	
+	public Student(String school) {
+		this.school=school;
+		System.out.println("调用的是public Student(String school) ");
+	}
+	
+	private  Student(String name,int age) {
+		this.name=name;
+		this.age= age;
+		System.out.println("调用的是private  Student(String name,int age)");
+	}
+	
+	public String school;
+	private String privateField;
+	String name;
+	int age;
+	public void showInfo() {
+		System.out.println("学校"+school);
+	}
+	@Override
+	public void studyInfo() {
+		// TODO Auto-generated method stub
+		System.out.println("学习内容");
+	}
+
+	@Override
+	public void moveType() {
+		// TODO Auto-generated method stub
+		System.out.println("自行车");
+	}
+	
+	private void test(String  name) {
+		System.out.println("这是私有方法test(String  name)");
+	}
+	
+	public String getSchool() {
+		return this.school;
+	}
+	
+	public void setInfo(String name,String school) {
+		this.name=name;
+		this.school=school;
+		System.out.println("这是setInfo(String name,String school)");
+	}
+	
+	public void setInfo(int age) {
+		System.out.println("这是setInfo(int age)");
+	}
+	
+}
+-------------------------------------------------------------------------------
+package date20200709;
+
+public interface Move {
+	void moveType();
+}
+---------------------------------------------
+package date20200709;
+
+public interface Study {
+	void studyInfo();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

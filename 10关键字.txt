@@ -1,0 +1,125 @@
+/*关键字-package*/
+//包等同于文件夹的概念，包和文件夹一样可以有多级，也就是包下可以有包和文件，多级的包用.分隔
+//例如  animal包下的子包cat用animal.cat的方式创建
+
+/*关键字-import*/
+//使用import语句来引入指定包层次下所需要的类或者全部类（.*）
+
+/*关键字-this*/
+
+//当形参与成员变量重名是，如果在方法的内部需要使用成员变量时，必须添加this来表明该变量是类成员
+//在任意方法内，如果使用当前类的成员变量或成员方法可以在其前面添加this，增强程序的阅读性
+//this可以作为一个类，构造方法相互调用的特殊格式
+public class Person{
+		public Person(){
+		
+	}
+	public Person(String name){
+		this();//调用构造函数Person()
+		//当形参与成员变量重名是，如果在方法的内部需要使用成员变量时，必须添加this来表明该变量是类成员
+		this.name=name;
+	}
+	public Person(int age,String name){
+		//this可以作为一个类，构造方法相互调用的特殊格式
+		this(1);//调用构造函数Person(String name )
+		this.age = age;//this.age表示类中的属性age,等号右边的age是传入的形参
+		this.name = name;
+	}
+	int age ;
+	String name ;
+	public void setName(String name){
+		this.name=name;//在任意方法内，如果使用当前类的成员变量或成员方法可以在其前面添加this，增强程序的阅读性
+	}
+}
+//注意
+//使用this()时必须放在构造器的首行
+//必须有一个构造器不使用this()，以保证不出现构造器自己调用自己
+
+
+/*关键字-super*/
+//用法："super.变量名"和"super.方法名()"
+//使用super，子类可以访问父类以上所有父类的属性和方法
+//使用super，子类直接追溯父类的成员变量和成员方法
+//子类中所有的构造函数都会访问父类默认的无参构造
+//当在父类中只有有参构造可以使用的时候，子类必须显式的声明一个构造来调用父类的有参构造-------
+//-------且调用父类构造方法要写在子类构造的第一行"super(参数列表)"，形参的个数与父类构造的个数相同
+//如果子类没有显式的调用父类或者本类的构造函数，并且父类中没有可以使用的无参构造函数，则编译出错。
+
+/*关键字-static*/
+//有些属性不想因为对象的不同而改变，将这些属性设置为类属性，相应的方法设置为类方法
+//特点
+//随着类的加载而加载  类加载之后，静态的方法和属性就能用 类名.被修饰成员
+//优先于对象使用
+//修饰的成员被所有对象共用
+//实例
+public class test1 {
+	//类变量不用实例化  直接类名.属性名就可以使用  是类的一部分 被所有这个类的实例化对象所共享 也叫做静态变量
+	static String countryString;
+	//实例变量 只有实例化之后才能使用 属于实例化对象的一部分 不能共用
+	String name;
+	int  age;
+	public static void  test() {
+		System.out.println("这是一个静态方法");//类名.方法()直接进行访问，不需要new 类名()
+	}
+}
+//类方法的使用通常是在工具类中
+//类方法中不能使用this和super
+//实例
+public class test1 {//工具类
+	//判断字符串是不是一个空字符串
+	public static boolean isEmpty(String s) {
+		boolean flag = false;
+		if (s !=null&&s.equals("")) {
+			flag=true;
+		}
+		return flag;
+	}
+}
+
+
+
+/*final*/
+//凡是被final标记的，类不能被继承  方法不能被重写，变量不能被改变
+//示例1
+public final class TestPerson {
+	int age;
+	String nameString;
+}
+
+public class T0 extends TestPerson{//报错
+	
+}
+//示例2
+public  class TestPerson {
+	int age;
+	final String name="";//final修饰的变量是常量，常量必须显式赋值
+	final static String NAME_1="";//static final 一起修饰的变量，就是全局常量
+	//常量定义的名称约定使用大写，如果是多个单词组成的名称，用_连接
+	//常量只能赋值一次，不能再改变。
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

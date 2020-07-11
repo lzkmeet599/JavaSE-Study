@@ -1,0 +1,225 @@
+/*接口*/
+//接口(interface)是抽象方法和常量值的定义的集合。
+//从本质上讲，接口是一种特殊的抽象类，这种抽象类中只包含常量和方法的定义，而没有变量和方法的实现。
+//
+//一个类可以实现多个接口，接口也可以继承其他接口
+//用interface来定义。
+//接口中的所有成员变量都默认是由public static final修饰的。
+//接口中的所有方法都默认是由public abstract修饰的。
+//接口没有构造器。
+//接口采用多层继承机制。
+//接口文件要用Interface
+//注意：如果实现接口的类中没有实现接口中的全部方法，必须将此类定义为抽象类 
+//总结 抽象类是对一类事物的高度抽象，其中既有属性也有方法
+//总结 接口是对方法的抽象，也就是对一系列动作的抽象
+//总结 当需要对一类食物抽象的时候，应该使用抽象类，好形成一个父类
+//总结 当需要对一系列动作进行抽象时，就使用接口，需要使用这些动作的类去实现相应的接口即可
+//总结 示例
+public interface TestIn {
+	int ID = 1;//等同于public static final int ID =1;
+	
+	void test();//public abstract void test();
+}
+public interface TestIn1 {
+	void test1();
+}
+
+
+/**
+ * 子类继承父类，只能继承一个父类
+ * 类可以是是实现多个接口，多个接口用,分隔
+ * @author l5113
+ *
+ */
+public class TestInImp1 implements TestIn,TestIn1{//类继承多个接口
+
+	@Override
+	public void test() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void test1() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
+
+//接口继承接口
+public interface TestIn2 extends TestIn {
+
+}
+
+/**
+ * 如果类没有实现接口的所有方法，这个类就要定义为抽象类
+ * @author l5113
+ *
+ */
+public abstract class TestInImp implements TestIn{//没有具体实现接口TestIn的test方法
+
+}
+
+/**
+ * 如果一个类既继承父类，又实现接口
+ * 那么先继承再实现
+ * @author l5113
+ *
+ */
+public class TestInImp2 extends Animal implements TestIn {
+
+	@Override
+	public void test() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void move() {
+		// TODO Auto-generated method stub
+		
+	}
+}
+
+//抽象类中 如果父类新增了一个抽象方法，那么子类就要重新实现对应的方法
+//在接口中  如果需要给父类增加方法，那么就新建一个接口，在接口中扩展方法，子类自行调用。
+//描述会唱歌的厨子是一个老师
+/**
+ * 厨艺接口
+ * @author l5113
+ *
+ */
+public interface Cooking {
+	void fry();
+}
+
+/**
+ * 歌唱接口
+ * @author l5113
+ *
+ */
+public interface Sing {
+	void singing();
+}
+
+/**
+ * 这个事描述会唱歌的厨子是一个老师
+ * @author l5113
+ *
+ */
+
+public class SCTeacher extends Person1 implements Cooking,Sing {
+	
+	String cource;
+	public void setInfo() {
+		super.age=25;
+		super.name="张三";
+		super.sex=1;
+		this.cource="数学";
+	}
+	
+	@Override
+	public void singing() {
+		// TODO Auto-generated method stub
+		System.out.println(super.name+"老师拿手的歌曲是菊花残");
+	}
+
+	@Override
+	public void fry() {
+		// TODO Auto-generated method stub
+		System.out.println(super.name+"老师拿手的厨艺是红烧肉");
+	}
+
+	@Override
+	public void showInfo() {
+		// TODO Auto-generated method stub
+		System.out.println("会唱歌的厨子的老师的信息是：");
+		System.out.println(super.age);
+		System.out.println(super.name);
+		System.out.println(super.sex);
+		System.out.println(this.cource);
+	}
+
+}
+//测试
+public class Test {
+	public static void main(String[] args) {
+		SCTeacher teacher = new SCTeacher();
+		teacher.setInfo();
+		teacher.showInfo();
+		teacher.singing();
+		teacher.fry();
+	}
+}
+//输出：
+//会唱歌的厨子的老师的信息是：
+//25
+//张三
+//1
+//数学
+//张三老师拿手的歌曲是菊花残
+//张三老师拿手的厨艺是红烧肉
+
+
+//接口的多态性
+public class Test {
+	public static void main(String[] args) {
+		//对象的多态
+		Cooking cooking = new SCTeacher();
+		cooking.fry();//null老师拿手的厨艺是红烧肉，null是因为Cooking接口中没有name属性
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,51 @@
+//一维数组
+声明
+	数据类型[] 变量名;
+	数据类型 变量名[];
+动态初始化
+	int[] i =new int[3];//声明一个能放3个int类型数据的数组
+静态初始化
+	int[] i=new int[]{1,2,3,4};//声明了一个存放了1 2 3 4这四个数的数组
+	//数组内的元素都有一个引用下标，从0开始。
+
+
+//二维数组
+声明
+	int[][] i=new int[][]{
+		{1,2},
+		{3,4}
+	};
+	
+	int[][] i=new int[2][3];//两行三列
+	
+	int[][]=i=new int[2][]//只定义第一维的长度，第二维不定义
+注意  
+	int[] x,y[];//x 一维数组  y 二维数组
+	
+	
+//冒泡排序
+int[] arr=new int[]{3,5,1,4,2};
+int temp =0;
+for(int i=0;i<arr.length-1;i++){
+	for(int j=0;j<arr.length-1-i;j++){
+		if(arr[j]>arr[j+1]){//正序 
+			temp=arr[j];
+			arr[j]=arr[j+1];
+			arr[j+1]=temp;
+		}
+	}
+}
+
+
+int[] arr=new int[]{3,5,1,4,2};
+int temp =0;
+for(int i=0;i<arr.length-1;i++){
+	for(int j=0;j<arr.length-1-i;j++){
+		if(arr[j]<arr[j+1]){//倒序
+			temp=arr[j];
+			arr[j]=arr[j+1];
+			arr[j+1]=temp;
+		}
+	}
+}
+

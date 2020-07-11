@@ -1,0 +1,15 @@
+public class Person{
+	public String name ;//public:可以在类的外部使用。
+	private int age;//private:私有，只能被该类的方法调用，不能被类的外部使用，不能通过  对象.属性  调用。
+	//修饰符可以用来修饰变量，指定变量是私有还是公有
+	//实例变量 就是说在类实例化成对象之后才能使用
+	
+	public static String sex="男";//static静态，类变量，不需要实例化就可以使用。
+	//可以直接通过  类名.属性名   使用。
+	public void showName(){//驼峰命名法
+		System.out.println("姓名："+name);
+	}
+	public int getAge(){
+		return age ;//返回的数据类型与方法定义的一致。
+	}
+}

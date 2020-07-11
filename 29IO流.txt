@@ -1,0 +1,697 @@
+/*IO流*/
+
+/*file类*/
+//File 能新建、删除、重命名文件和目录，但 File 不能访问文件内容本身。如果需要访问文件内容本身，则需要使用输入/输出流。
+//File对象可以作为参数传递给流的构造函数
+//File  能新建、删除、重命名文件和目录，但 File 不能访问文件内容本身。如果需要访问文件内容本身，则需要使用输入/输出流。
+//在写入一个文件时，如果目录下有同名文件将被覆盖。
+//在读取文件时，必须保证该文件已存在，否则出异常。
+//实例讲解
+package date20200707;
+
+import java.io.File;
+
+public class Test {
+	public static void main(String[] args) {
+		File f = new File("E:\\test\\test.txt");//这个时候对象f就是test.txt文件
+		File f2 = new File("E:\\test");
+//		File f1 = new File("E:\\test","\\test.txt");//这种使用相对较少
+		//注意  \在java中表示转义符  所以\\才表示路径分隔符
+		System.out.println(f.getName());//获取文件名
+		System.out.println(f2.getName());//获取文件夹名
+		System.out.println(f.getPath());//获取文件路径
+		
+		File f5 =new File("src/date20200707/Test.java");//使用相对路径来创建file对象
+		System.out.println(f5.getPath());//获取文件或文件夹的路径 也就是new file时候写的路径
+		System.out.println(f5.getAbsolutePath());//获取当前文件的绝对路径
+		
+		System.out.println(f5);
+		System.out.println(f5.getAbsoluteFile());//返回一个用当前文件的绝对路径构建的file对象
+		
+		System.out.println(f5.getParent());//返回当前文件或者文件夹的父级路径
+		
+		f.renameTo(new File("E:\\test\\test1.txt"));//给文件或者文件夹重命名
+		
+		File f6 =  new File("E:\\test\\test1.txt");
+		System.out.println(f6.exists());//判断文件是否存在
+		
+		File f7 =  new File("E:\\test\\test1.txt");
+		System.out.println(f7.canRead());//判断文件是否可读
+		System.out.println(f7.canWrite());//判断文件是否可写
+		
+		System.out.println(f7.isFile());//判断当前的file对象是否是文件
+		System.out.println(f7.isDirectory());//判断当前file对象是否是文件夹
+		
+		System.out.println(f7.lastModified());//返回文件的最后修改时间 返回值是毫秒数
+		System.out.println(f7.length());//返回文件的长度 单位是字节数
+		
+		File f8 =new File("E:\\test\\test2.txt");
+		System.out.println(f8.exists());
+		if(!f8.exists()) {
+			try {
+				f8.createNewFile();//创建新文件
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		f8.delete();//删除文件
+		
+		File f9 = new File("E:\\test\\abc\\cc");
+		f9.mkdir();
+		
+		File f10 = new File("E:\\test\\abc\\a\\b\\c");
+		f10.mkdirs();
+		
+		File f11 = new File("E:\\test\\abc");
+		String[] s =f11.list();//返回当前文件夹的子集
+		for (String string : s) {
+			System.out.println(string);
+		}
+		
+		File f12 = new File("E:\\test\\abc");//返回当前文件夹下的子集的file对象 包括目录和文件
+		File[] file =f12.listFiles();
+		for (File ff : file) {
+			System.out.println(ff);
+		}
+		
+		//遍历E盘下的test文件 把test文件下所有的目录与文件都遍历出来
+		//这个使用递归的方式来实现
+		File f13 = new File("E:\\test");
+		new Test().test(f13);
+		
+	}
+	/**
+	 *递归遍历文件
+	 */
+	public void test(File file) {
+		if(file.isFile()) {
+			System.out.println(file.getAbsolutePath()+"是文件");
+		}else {
+			System.out.println(file.getAbsolutePath()+"是文件夹");
+			//如果是文件夹 这个文件夹里就有可能有子文件夹或者文件的file对象
+			File[] fsFiles=file.listFiles();//获取当前文件夹下的子文件夹或者文件的file对象
+			if (fsFiles!=null&&fsFiles.length>0) {
+				for (File file2 : fsFiles) {
+					test(file2);
+				}
+			}
+		}
+	}
+}
+
+------------------------------------------------------------------------------------------------------------------------
+
+/*文件字节输出流---从文件中读取数据*/
+import java.io.FileInputStream;
+
+public class Test1 {
+	public static void main(String[] args) {
+		try {
+			//关键语句
+			FileInputStream in = new FileInputStream("E:\\test\\abc\\tt1.txt");
+			
+			byte[] b = new byte[10];//设置一个byte数组接收读取的文件内容
+			int len= 0;
+//			in.read(b);//in.read有一个返回值 返回值是读取的数据长度 如果读取到最后一个数据  还会向后读一个 此时返回值为-1
+			//当in.read()的返回值为-1 那么整个文件就读取完毕了
+			//如果声明的数组长度小于文件的字节长度，但是要读取文件的全部内容，那么就用while来遍历读取 每次读取的长度就是声明的数组长度
+			while((len = in.read(b)) != -1) {
+				System.out.println(new String(b,0,len) );
+				//new String(b,0,len) 第一个参数是缓冲数据的数组 第二个参数是从数组的哪个位置开始转化字符串 第三个参数是每次转化的长度
+			}
+			
+			//System.out.println(new String(b));
+			
+			in.close();//流在使用完毕之后一定要关闭
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+}
+------------------------------------------------------------------------------------------------------------------------
+/*文件字节输入流---向文件中写入数据*/
+import java.io.FileOutputStream;
+
+public class Test1 {
+	public static void main(String[] args) {
+		try {
+			FileOutputStream out = new FileOutputStream("E:\\test\\abc\\tt1.txt");
+			
+			String string="132464fasdfaer";
+			out.write(string.getBytes());
+			out.flush();//把数据刷入硬盘
+			out.close();//流在使用完毕之后一定要关闭
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+}
+
+------------------------------------------------------------------------------------------------------------------------
+/*复制文件到指定的位置*/
+	/**
+	 * 复制文件到指定的位置
+	 * @param inPath 源文件的路径
+	 * @param outPath 复制到的文件夹的位置
+	 */
+	public void copyFile(String inPath,String outPath) {
+		try {
+			FileInputStream inputStream =new FileInputStream(inPath);
+			FileOutputStream outputStream = new FileOutputStream(outPath);
+			byte[] b = new byte[100];
+			int len =0;
+			while((len = inputStream.read(b)) != -1) {
+				outputStream.write(b,0,len);
+			}
+			outputStream.flush();
+			outputStream.close();//流在使用完毕之后一定要关闭
+			inputStream.close();
+			
+					
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+
+
+------------------------------------------------------------------------------------------------------------------------
+/*字符流读写复制*/
+import java.io.FileReader;
+import java.io.FileWriter;
+
+
+public class Test2 {
+	public static void main(String[] args) {
+		//在写入一个文件时，如果目录下有同名文件将被覆盖。
+		//在读取文件时，必须保证该文件已存在，否则出异常。
+		Test2.TestFileReader("E:\\test\\abc\\tt1.txt");
+		Test2.testFileWriter("hello world", "E:\\test\\abc\\tt2.txt");
+		Test2.copyFile("E:\\test\\abc\\tt2.txt", "E:\\test\\abc\\a\\tt3.txt");
+		
+	}
+	
+	/**
+	 * 文件字符输入流FileReader
+	 * @param inPath
+	 */
+	public static void TestFileReader(String inPath) {
+		try {
+			FileReader fReader= new FileReader(inPath);
+			char[] c= new char[10];
+			int len = 0 ;
+		
+			while((len = fReader.read(c)) != -1){
+				System.out.println(new String(c,0,len));
+			}
+			fReader.close();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * 文件字符输出流
+	 * @param text 出的内容
+	 * @param outPath 输出的文件
+	 */
+	public static void testFileWriter(String text,String outPath) {
+		try {
+			FileWriter fileWriter = new FileWriter(outPath);
+			fileWriter.write(text);
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 字符流完成拷贝文件 字符流只适合操作内容是字符的文件 txt文档
+	 * @param inPath
+	 * @param outPath
+	 */
+	public static void copyFile(String inPath,String outPath) {
+		try {
+			FileReader fReader= new FileReader(inPath);
+			FileWriter fileWriter = new FileWriter(outPath);
+			char[] c = new char[100];
+			int len =0;
+			while((len = fReader.read(c)) != -1) {
+				fileWriter.write(c,0,len);
+			}
+			fileWriter.flush();
+			fReader.close();
+			fileWriter.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+}
+
+---------------------------------------------------------------------------------------------------------------------------
+
+/*缓冲流*/
+//BufferedInputStream 和 BufferedOutputStream
+//实例讲解
+/**
+ * 缓冲字节流
+ */
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+/**
+ * 缓冲字节流
+ * @author l5113
+ *
+ */
+public class Test {
+	public static void main(String[] args) {
+		try {
+			Test.testBufferedInputStream();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		try {
+			Test.testBufferedOutputStream();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		try {
+			Test.copyFile();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * 缓冲字节输入流
+	 * @throws Exception 
+	 */
+	public static void testBufferedInputStream() throws Exception {
+		//文件字节输入流对象
+		FileInputStream inputStream = new FileInputStream("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200707_afternoon\\tt.txt");
+		
+		//把文件字节输入流放到缓冲字节输入流对象
+		BufferedInputStream brBufferedInputStream = new BufferedInputStream(inputStream);
+		
+		byte[] b= new byte[10];
+		int len = 0 ;
+		while((len= brBufferedInputStream.read(b))!=-1) {
+			System.out.println(new String(b,0,len));
+		}
+		//关闭流的时候 最后开的最先关
+		brBufferedInputStream.close();
+		inputStream.close();
+	}
+	
+	/**
+	 * 缓冲字节输出流
+	 * BufferedOutputStream
+	 * @throws Exception 
+	 */
+	public static void testBufferedOutputStream() throws Exception {
+		FileOutputStream outputStream = new FileOutputStream("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200707_afternoon\\tt1.txt");
+		
+		BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+		
+		String string = "hello world";
+		
+		bufferedOutputStream.write(string.getBytes());
+		
+		bufferedOutputStream.flush();
+		
+		bufferedOutputStream.close();
+		outputStream.close();
+	}
+	
+	/**
+	 * 缓冲字节文件复制
+	 * @throws Exception
+	 */
+	public static void copyFile() throws Exception {
+		BufferedInputStream  brBufferedInputStream = new BufferedInputStream(new FileInputStream("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200707_afternoon\\tt.txt"));
+		BufferedOutputStream brBufferedOutputStream =new BufferedOutputStream(new FileOutputStream("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200707_afternoon\\tt1.txt"));
+		
+		byte[] b = new byte[100];
+		int len =0;
+		while((len = brBufferedInputStream.read(b)) != -1) {
+			brBufferedOutputStream.write(b,0,len);
+		}
+		brBufferedOutputStream.flush();
+		brBufferedOutputStream.close();
+		brBufferedInputStream.close();
+		
+	}
+}
+//BufferedReader 和 BufferedWriter 缓冲字符流与上面的类似
+
+-----------------------------------------------------------------------------------------------------------------------
+/*转换流*/
+//转换流提供了在字节流和字符流之间的转换
+//Java API提供了两个转换流：
+//InputStreamReader和OutputStreamWriter
+//实例讲解
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+
+/**
+ * 转换流
+ * 可以把字节流转换成字符流
+ * 当字节流中的数据都是字符时，使用转换流转换成字符流 操作起来效率更高
+ * @author l5113
+ *
+ */
+public class Test2 {
+	public static void main(String[] args) {
+		//所有的文件都是有编码格式
+		//对于我们来说 txt和java文件一般来说有三种编码
+		//ISO8859-1 西欧编码 是纯粹的英文编码 不适应汉字
+		//gbk和utf-8编码适用于中文和英文
+		//一般使用utf-8
+		try {
+			Test2.testInputStreamReader();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		try {
+			Test2.testOutputStreamWriter();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * 转换字节输入流为字符输入流
+	 * 在转换字符流的时候 设置的字符集编码要与读取文件的数据编码一致  不然就会出现乱码
+	 * InputStreamReader
+	 * @throws Exception 
+	 */
+	public static void testInputStreamReader() throws Exception {
+		FileInputStream fs = new FileInputStream("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200707_afternoon\\tt2.txt");
+		
+		//把字节流转换成字符流
+		InputStreamReader in = new InputStreamReader(fs,"GBK");//参数1是字节流 参数2是编码
+		
+		char[] c= new char[10];
+		int len = 0 ;
+	
+		while((len = in.read(c)) != -1){
+			System.out.println(new String(c,0,len));
+		}
+		
+		in.close();
+		fs.close();
+	}
+	/**
+	 * 转换字节输出流为字符输出流
+	 * 在转换字符流的时候 设置的字符集编码要与读取文件的数据编码一致  不然就会出现乱码
+	 * OutputStreamWriter
+	 * @throws Exception 
+	 */
+	public static void testOutputStreamWriter() throws Exception {
+		FileOutputStream out = new FileOutputStream("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200707_afternoon\\tt3.txt");
+		
+//		OutputStreamWriter os= new OutputStreamWriter(out,"UTF-8");//乱码
+		OutputStreamWriter os= new OutputStreamWriter(out,"GBK");//文件默认GBK编码
+		
+		os.write("你好你好");
+		os.flush();
+		
+		os.close();
+		out.close();
+		
+	}
+}
+
+--------------------------------------------------------------------------------------------------------------------------
+/*标准输入输出流*/
+//System.in和System.out分别代表了系统标准的输入和输出设备
+//  默认输入设备是键盘，输出设备是显示器
+//   System.in的类型是InputStream
+//   System.out的类型是PrintStream，其是OutputStream的子类FilterOutputStream 的子类
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+/**
+ * 标准输入输出流
+ * @author l5113
+ *
+ */
+public class Test3 {
+	public static void main(String[] args) {
+//		try {
+//			Test3.testSystemIn();
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+		
+		try {
+			Test3.writerTXT();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 标准的输入流
+	 * @throws IOException
+	 */
+	public static void testSystemIn() throws IOException {
+		//创建一个接受键盘输入数据的输入流
+		InputStreamReader is = new InputStreamReader(System.in);
+		
+		//把输入流放到缓冲流中
+		BufferedReader br = new BufferedReader(is);
+		
+		String str = "";//定义一个临时接收数据的字符串
+		
+		while((str= br.readLine())!=null) {
+			System.out.println(str);
+		}
+		
+		br.close();
+		is.close();
+	}
+	
+	/**
+	 * 把控制台输入的内容写入指定的文件 当接收到over字符串时 就结束程序运行
+	 * @throws IOException 
+	 */
+	public static void writerTXT() throws IOException {
+		//创建一个接受键盘输入数据的输入流
+		InputStreamReader is = new InputStreamReader(System.in);
+		
+		//把输入流放到缓冲流中
+		BufferedReader br = new BufferedReader(is);
+		
+		BufferedWriter out = new BufferedWriter(new FileWriter("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200707_afternoon\\tt4.txt"));
+		
+		String line= "";
+		
+		while((line= br.readLine())!=null) {
+			if (line.equals("over")) {
+				break;
+		}
+			//读取的每一行都写到指定的txt文件中
+			out.write(line);
+		}
+		out.flush();
+		out.close();
+		br.close();
+		is.close();
+		
+	}
+	
+	/**
+	 * 在一个txt文件中写一组用户名和密码   通过控制台输入用户名和密码  与txt文件中的用户名和密码做对比  如果一样就打印登录成功在控制台上，如果不一致就打印用户名密码错误
+	 */
+
+}
+
+------------------------------------------------------------------------------------------------------------------------
+/*处理流-对象流*/
+//ObjectInputStream和OjbectOutputSteam
+//用于存储和读取对象的处理流。它的强大之处就是可以把Java中的对象写入到数据源中，也能把对象从数据源中还原回来。
+//假设有一个person对象  
+//把这个对象存到硬盘上  硬盘存储的基础是二进制  那么需要把这个对象转换成 一个二进制的字节流 把这个流保存到电脑上。---
+//----要使用这个对象时  需要把流转换成对象再使用
+//把这个对象通过网络传到另一个机器上，网路通信的基础是也是二进制 也就是需要把这个对象转换成二进制数据流 把这个流通过网络进行传输----
+//----接收者如果需要使用接受的对象，就需要把对象的流转换成对象
+//正是因为保存对象到硬盘和对象的网络传输  需要做这两件事 就产生了对象的输入输出流
+//序列化(Serialize)：用ObjectOutputStream类将一个Java对象写入IO流中
+//反序列化(Deserialize)：用ObjectInputStream类从IO流中恢复该Java对象
+//序列化和反序列化针对的都是对象的各种属性 不包括类的属性
+//如果需要让某个对象支持序列化机制，则必须让其类是可序列化的，为了让某个类是可序列化的，该类必须实现如下两个接口之一：
+     Serializable
+     Externalizable
+//实例讲解
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+
+/**
+ * 序列化与反序列化
+ * 注意 对象的序列化与反序列化使用的类要严格一致，包名 类名 类结构等等所有都要一致
+ * @author l5113
+ *
+ */
+public class Test {
+	public static void main(String[] args) {
+		try {
+			Test.testSerialize();
+			Test.testDeserialize();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 对象的序列化
+	 * @throws Exception 
+	 * @throws FileNotFoundException 
+	 */
+	public static void testSerialize() throws Exception {
+		//定义对象的输出流 把对象序列化之后的流放到指定的文件中
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200708\\tt9.txt"));
+		
+		Person P=new Person();
+		P.name="张三";
+		P.age = 11;
+		
+		out.writeObject(P);
+		out.flush();
+		out.close();
+	}
+	
+	/**
+	 * 对象的反序列化
+	 * @throws Exception 
+	 */
+	public static void testDeserialize() throws Exception {
+		//从指定的文件中把对象序列化的流读取出来
+		ObjectInputStream in = new ObjectInputStream(new FileInputStream("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200708\\tt9.txt"));
+		
+		Object obj=in.readObject();
+		
+		Person p =(Person)obj;
+		
+		System.out.println(p.name);
+		System.out.println(p.age);
+		
+		in.close();
+		
+	}
+	
+}
+
+------------------------------------------------------------------------------------------------------------------------
+/*RandomAccessFile 类*/
+//RandomAccessFile 类支持 “随机访问” 的方式，程序可以直接跳到文件的任意 地方来读、写文件
+//     支持只访问文件的部分内容
+//     可以向已存在的文件后追加内容
+//实例讲解
+import java.io.RandomAccessFile;
+
+/**
+ * 文件的随机读取
+ * 程序可以直接跳到文件的任意 地方来读、写文件
+ * @author l5113
+ *
+ */
+public class Test1 {
+	public static void main(String[] args) {
+		try {
+			Test1.testRandomAccessFileRead();
+			Test1.testRandomAccessFileWrite();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public static void testRandomAccessFileRead() throws Exception {
+		//RandomAccessFile的构造有两个参数 参数1是文件的路径  参数2是指定RandomAccessFile的访问模式
+		//r: 以只读方式打开
+		//rw：打开以便读取和写入
+		//rwd:打开以便读取和写入；同步文件内容的更新
+		//rws:打开以便读取和写入；同步文件内容和元数据的更新
+		//最常用的是r,rw
+
+		RandomAccessFile ra = new RandomAccessFile("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200708\\tt10.txt", "r");
+		
+//		ra.seek(0);//设置读取文件的起始点  0表示从0个字节开始读取
+		ra.seek(9);//换行符“/t”算2个字节  通过设置读取文件的起始点来达到从文件的任意位置开始读取
+		
+		byte[] b= new byte[1024];
+		
+		int len=0;
+		
+		while((len=ra.read(b))!=-1) {
+			System.out.println(new String(b,0,len));
+		}
+		
+		ra.close();
+	}
+	
+	/**
+	 * 随机写
+	 * @throws Exception 
+	 */
+	public static void testRandomAccessFileWrite() throws Exception {
+		RandomAccessFile ra = new RandomAccessFile("C:\\Users\\l5113\\Workspaces\\MyEclipse CI\\JavaStudent\\src\\date20200708\\tt10.txt", "rw");
+		
+		//注意 如果是在文件的起始位置或者中间位置写入，那么写入的内容会覆盖等长的文件内容  文件的最开头位置为0 第一个字节为第二个位置2  第一个字节与第二个字节之间的空隙为第三个位置 依次类推
+		//一个汉字占2个字节   换行符“/t”算2个字节
+		ra.seek(6);//设置写的起始点 0表示从开头开始插入写的内容
+//		ra.seek(ra.length());//设置写的起始点  ra.length()表示在文件的最后追加内容
+		
+		ra.write("甜".getBytes());
+		
+		ra.close();
+	}
+	
+}

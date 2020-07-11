@@ -1,0 +1,33 @@
+变量
+	定义格式：数据类型 变量名=变量的值  例如 int i=2
+	int i=2;
+	i=3;
+	注意 声明变量的过程中的=号不是数学意义中的=，而是代表赋值。
+
+	变量作用域：在一对{}内有效	
+	需要初始化值 int i ;//这样写不对
+
+变量类型
+	基本数据类型：byte short int long float double char boolean 
+		声明和赋值时不能超过数据类型的取值范围。
+		定义格式:
+			byte b=12;
+			int i=1;
+			short i=22;
+			long i=1000l ;//long 数据类型定义时需要在值的后面加一个l
+			double i=1.22;
+			float i = 1.22f ;//float数据类型变量赋值时需要在值的后面加一个f
+			char i='a'; //单引号
+			boolean b1=true;
+			boolean b2=false ;//布尔类型只有这两种值
+	引用数据类型：其他所有数据类型都是引用数据类型
+		定义格式：
+			字符串类型
+				String str="hello world";//需要用双引号！String类型变量一旦赋值就不可改变
+				注意
+					String s1="hello";
+					String s2="hello";
+					内存中只会存在一个"hello"
+		引用类型都可以用null作为值，也就是说可以在初始化时赋值为null
+	
+		

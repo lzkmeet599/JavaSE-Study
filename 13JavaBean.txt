@@ -1,0 +1,21 @@
+/*JavaBean*/
+//定义：
+//私有的属性
+//每个属性都有对应的get set方法
+public class Person{
+	private String name;
+	private int age;
+	鼠标右键-source-Generate Getter and Setter 可自动生成一下方法
+	public void setName(String name){
+		this.name = name;
+	}
+	public String getName(){
+		return this.name;
+	}
+	public void setAge(int age){
+		this.age = age;
+	}
+	public String getAge(){
+		return this.age;
+	}
+}

@@ -1,0 +1,29 @@
+if(条件表达式){
+	...
+}
+else if (条件表达式){
+	...
+}
+...
+else {
+	...
+}
+
+
+
+
+
+switch(变量){
+case 常量1:
+	语句1；
+	break;
+case 常量2:
+	语句2;
+	break;
+	.
+	.
+	.
+default:
+	语句;
+	break;
+}

@@ -1,0 +1,493 @@
+/*线程*/
+//何时需要使用线程？
+//	程序需要同时执行两个或多个任务。
+//	程序需要实现一些需要等待的任务时，如用户输入、文件读写操作、网络操作、搜索等。
+//	需要一些后台运行的程序时。
+
+
+/*多线程的创建和启动*/
+//Java语言的JVM允许程序运行多个线程，它通过java.lang.Thread类来实现。
+//Thread类的特性
+//Thread对象的run()方法 想要在开启的多线程里运行的代码逻辑就写在run()方法中
+//通过该Thread对象的start()方法来调用这个线程
+//创建线程的两种方式
+//继承Thread类
+//实例讲解
+package date20200710;
+
+public class Test {
+	public static void main(String[] args) {
+		Thread t0 = new TestThread();
+		t0.start();//启动线程  开始运行run方法中的代码
+		System.out.println("------------1------------");
+		System.out.println("------------2------------");
+		System.out.println("------------3------------");
+		/**
+		 * 多次运行这个main方法之后
+		 * 我们发现main方法中打印的3行与开启线程运行run()方法的打印语句是混合起来的
+		 * 而且main方法中的打印与run方法中打印语句的顺序是不固定的
+		 * 为什么呢
+		 * main执行的t0.start()方法开启多线程之后   就相当于在main方法之外开启了一个支流
+		 * 这个时候t0.start()的之后的main方法的其他代码的运行与run的方法运行无关了
+		 * 以当前代码为例
+		 * t0.start()的之后的main方法的其他代码与run方法并行运行
+		 * 两者的输出混合 没有先后关系 但各自代码的执行是严格按照代码顺序执行的
+		 * 这就是多线程的异步，这个异步是相当于执行t0.start主程序来说的
+		 */
+	}
+}
+------------------------------------------
+package date20200710;
+
+/**
+ * 继承Thread类的方式实现多线程
+ * @author l5113
+ *
+ */
+public class TestThread extends Thread {
+	@Override
+	public void run() {
+		System.out.println("多线程运行的代码");
+		for(int i = 0;i<5;i++) {
+			System.out.println("这是多线程的逻辑代码："+i);
+		}
+	}
+}
+
+
+//创建线程的两种方式-实现Runnable接口
+//继承Thread:       线程代码存放Thread子类run方法中。重写run方法
+//实现Runnable：线程代码存在接口的子类的run方法。实现run方法
+//一般使用这个方式来创建线程 因为继承只能单继承，当一个类继承了Thread类实现了线程，但是不能再继承其他的类了。 而接口可以被多个类共享
+//实例讲解
+package date20200710;
+
+public class Test {
+	public static void main(String[] args) {
+		//继承Thread的线程
+//		Thread t0 = new TestThread();
+//		t0.start();//启动线程  开始运行run方法中的代码
+		//实现Runnable接口的线程
+		Thread t1= new Thread(new TestRunnable());
+		t1.start();
+		Thread t2= new Thread(new TestRunnable(),"t-1");//t-1为该线程的名字
+		t2.start();
+		
+		
+		//说明了多线程共享一个接口的资源 此例共享的是run()中的count属性
+		//Runnable run= new TestRunnable();
+		//Thread t1= new Thread(run,"t-1");//t-2为该线程的名字
+		//t1.start();
+		//Thread t2= new Thread(run,"t-2");//t-2为该线程的名字
+		//t2.start();
+		
+		System.out.println("------------1------------");
+		System.out.println("------------2------------");
+		System.out.println("------------3------------");
+		/**
+		 * 多次运行这个main方法之后
+		 * 我们发现main方法中打印的3行与开启线程运行run()方法的打印语句是混合起来的
+		 * 而且main方法中的打印与run方法中打印语句的顺序是不固定的
+		 * 为什么呢
+		 * main执行的t0.start()方法开启多线程之后   就相当于在main方法之外开启了一个支流
+		 * 这个时候t0.start()的之后的main方法的其他代码的运行与run的方法运行无关了
+		 * 以当前代码为例
+		 * t0.start()的之后的main方法的其他代码与run方法并行运行
+		 * 两者的输出混合 没有先后关系 但各自代码的执行是严格按照代码顺序执行的
+		 * 这就是多线程的异步，这个异步是相当于执行t0.start主程序来说的
+		 */
+	}
+	
+}
+------------------------------------------
+
+package date20200710;
+/**
+ * 通过实现Runnable接口的方式实现多线程
+ * @author l5113
+ *
+ */
+public class TestRunnable implements Runnable{
+	int count=0;
+	@Override
+	public void run() {
+		System.out.println(Thread.currentThread().getName()+"Runnable多线程运行的代码");
+		for(int i = 0;i<5;i++) {
+			System.out.println("这是Runnable多线程的逻辑代码："+count);
+		}
+	}
+	
+}
+
+
+
+
+
+---------------------------------------------------
+/*Thread类的有关方法*/
+//实例讲解
+package date20200710;
+
+import sun.security.krb5.internal.Ticket;
+
+public class Test1 {
+	public static void main(String[] args) {
+		TestRun run0= new TestRun();
+		TestRun run1= new TestRun();
+		//定义线程
+		Thread t0= new Thread(run0);//没有给线程定义名字
+		Thread t1= new Thread(run1);
+		
+		t0.setName("线程t-0");//给线程设置名称 也可以在定义线程的时候定义名称
+		t1.setName("线程t-1");
+		
+		//设置线程的优先级
+//		t0.setPriority(1);
+//		t1.setPriority(10);
+		
+		t0.start();
+		t1.start();
+		System.out.println(t0.getName());//没有自定义给线程定义名字时  就会返回系统指定的默认名称 Thread-0
+		System.out.println(t1.getName());//没有自定义给线程定义名字时  就会返回系统指定的默认名称 Thread-1
+		
+		
+		
+		/**
+		 * 线程的优先级就是哪个线程有较大的概率被执行
+		 *优先级用数字1-10来表示  数字越大 优先级越高  如果没有设置  默认优先级是5
+		 */
+		
+		System.out.println("t0的优先级："+t0.getPriority());//获取线程的优先级
+		
+		System.out.println("------------1------------");
+		System.out.println("------------2------------");
+		
+		System.out.println(t1.isAlive());//判断当前线程是否存活
+		
+		t1.stop();//强制停止该线程
+		
+		System.out.println(t1.isAlive());
+		
+		try {
+			//当某个程序执行流中调用其他线程的 join() 方法时，调用线程将被阻塞，直到 join() 方法加入的 join 线程执行完为止   
+			t0.join();//相当于将t0的run()代码插入到这里执行
+			/**
+			 * 专业的说法
+			 * 就是阻塞了当前的main方法 先不执行System.out.println("------------3------------");代码
+			 * 先执行join进来的代码
+			 * join线程执行完毕之后继续执行之前main方法阻塞的代码System.out.println("------------3------------");
+			 */
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("------------3------------");
+		
+	}
+}
+
+class TestRun implements Runnable{
+	int count=0;
+	@Override
+	public void run() {
+		System.out.println(Thread.currentThread().getName()+"Runnable多线程运行的代码");
+		for(int i = 0;i<5;i++) {
+			try {
+//				Thread.sleep(1000);//当前线程睡眠1000ms
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+//			if(i%2==0) {
+//				Thread.yield();//线程让步
+//			}
+			count++;
+			System.out.println("这是"+Thread.currentThread().getName()+"Runnable多线程的逻辑代码："+count);
+		}
+	}
+}
+
+------------------------------------------------------------------------------------------------------------
+/*线程的同步*/
+/*线程的通信*/
+//实例讲解
+package date20200710;
+
+public class Test2 {
+	public static void main(String[] args) {
+		//定义账户对象
+		Acount a = new Acount();
+		Acount a1 = new Acount();
+		
+		//多线程对象
+		User u_weixin = new User(a, 2000);
+		User u_zhifubao = new User(a, 2000);
+		
+		Thread weixin = new Thread(u_weixin,"微信");
+		Thread zhifubao = new Thread(u_zhifubao,"支付宝");
+		
+		weixin.start();
+		zhifubao.start();
+	}
+}
+
+class Acount{
+	public static int money = 3000;//全局变量，所有的操作共享这个变量
+	
+	/**
+	 * 提款，判断账户钱够不够
+	 * 多线程调用这个方法，就有问题，线程共享资源时，一个线程在执行这个方法没有完毕时，另一个线程又开始执行这个方法
+	 * 解决思路：显然一个线程整体执行完这个方法，另一个线程再执行
+	 * 通过synchronized同步锁来完成
+	 * 可以直接在方法上加上synchronized关键字
+	 * 在普通方法上加同步锁synchronized，锁的是整个对象，不是某一个方法
+	 * 不同的对象就是不同的锁，普通方法加synchronized，线程使用不同的此方法的对象，还有共享资源的问题
+	 * 
+	 * 普通方法加同步锁，锁的当前方法对应的对象，当前的对象的所有加了同步锁的方法是共用一个同步锁
+	 * @param m
+	 */
+	public synchronized void drawing(int m){
+		String name = Thread.currentThread().getName();
+		
+		if(money < m){
+			System.out.println(name + "操作，账户金额不足：" + money);
+		}else{
+			System.out.println(name + "操作，账户原有金额：" + money);
+			System.out.println(name + "操作，取款金额：" + m);
+			
+			System.out.println(name + "操作，取款操作：原金额" + money + " - " + "取款金额" + m);
+			money = money - m;
+			System.out.println(name + "操作，取款后的余额：" + money);
+		}
+		
+	}
+	
+	public synchronized void drawing1(int m){
+		String name = Thread.currentThread().getName();
+		
+		if(money < m){
+			System.out.println(name + "操作，账户金额不足：" + money);
+		}else{
+			System.out.println(name + "操作，账户原有金额：" + money);
+			System.out.println(name + "操作，取款金额：" + m);
+			
+			System.out.println(name + "操作，取款操作：原金额" + money + " - " + "取款金额" + m);
+			money = money - m;
+			System.out.println(name + "操作，取款后的余额：" + money);
+		}
+		
+	}
+	
+	/**
+	 * 静态的方法加synchronized，对于所有的对象都是使用同一个一个锁
+	 * @param m
+	 */
+	public static synchronized void drawing2(int m){
+		String name = Thread.currentThread().getName();
+		
+		if(money < m){
+			System.out.println(name + "操作，账户金额不足：" + money);
+		}else{
+			System.out.println(name + "操作，账户原有金额：" + money);
+			System.out.println(name + "操作，取款金额：" + m);
+			
+			System.out.println(name + "操作，取款操作：原金额" + money + " - " + "取款金额" + m);
+			money = money - m;
+			System.out.println(name + "操作，取款后的余额：" + money);
+		}
+		
+	}
+	
+	/**
+	 * 对代码块加入同步锁
+	 * 代码块synchronized(this)，所有当前的对象的synchronized(this)同步的的代码都是使用同一个锁
+	 * @param m
+	 */
+	public void drawing3(int m){
+		synchronized(this){//表示当前的对象的代码块被加了synchronized同步锁
+			//用this锁代码块是代表当前的对象，如果在其他方法中也有synchronized(this)的代码块使用的都是同一个同步锁
+			String name = Thread.currentThread().getName();
+			
+			if(money < m){
+				System.out.println(name + "操作，账户金额不足：" + money);
+			}else{
+				System.out.println(name + "操作，账户原有金额：" + money);
+				System.out.println(name + "操作，取款金额：" + m);
+				
+				System.out.println(name + "操作，取款操作：原金额" + money + " - " + "取款金额" + m);
+				money = money - m;
+				System.out.println(name + "操作，取款后的余额：" + money);
+			}
+		}
+	}
+	
+	public void drawing4(int m){
+		synchronized(this){//表示当前的对象的代码块被加了synchronized同步锁
+			//用this锁代码块是代表当前的对象，如果在其他方法中也有synchronized(this)的代码块使用的都是同一个同步锁
+			String name = Thread.currentThread().getName();
+			
+			if(money < m){
+				System.out.println(name + "操作，账户金额不足：" + money);
+			}else{
+				System.out.println(name + "操作，账户原有金额：" + money);
+				System.out.println(name + "操作，取款金额：" + m);
+				
+				System.out.println(name + "操作，取款操作：原金额" + money + " - " + "取款金额" + m);
+				money = money - m;
+				System.out.println(name + "操作，取款后的余额：" + money);
+			}
+		}
+	}
+	
+	/**
+	 * synchronized修饰代码块，想要根据不同的对象有不同的锁
+	 * synchronized(a),这个小括号中传入不同的对象就是不同的锁
+	 * @param m
+	 */
+	public void drawing5(int m,Acount a){
+		synchronized(a){//表示通过方法的参数传递进来的对象的代码块被加了synchronized同步锁
+			//不同的对象就有不同的同步锁
+			String name = Thread.currentThread().getName();
+			
+			//如果是微信操作的，先不执行，等支付宝操作，支付宝操作完，微信再继续操作
+			if(name.equals("微信")){
+				try {
+					a.wait();//当前的线程进入等待的阻塞状态
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if(money < m){
+				System.out.println(name + "操作，账户金额不足：" + money);
+			}else{
+				System.out.println(name + "操作，账户原有金额：" + money);
+				System.out.println(name + "操作，取款金额：" + m);
+				
+				System.out.println(name + "操作，取款操作：原金额" + money + " - " + "取款金额" + m);
+				money = money - m;
+				System.out.println(name + "操作，取款后的余额：" + money);
+			}
+			
+			if(name.equals("支付宝")){
+				try {
+					a.notify();//唤醒当前优先级最高的线程，进入就绪状态
+//					a.notifyAll();//唤醒当前所有的线程，进入就绪状态
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+} 
+
+class User implements Runnable{
+	Acount acount;
+	int money;
+	public User(Acount acount,int money){
+		this.acount = acount;
+		this.money = money;
+	}
+	@Override
+	public void run() {
+//		acount.drawing(money);
+//		if(Thread.currentThread().getName().equals("微信")){
+////			acount.drawing(money);
+//			acount.drawing3(money);
+//		}else{
+////			acount.drawing1(money);
+//			acount.drawing4(money);
+//		}
+//		acount.drawing2(money);//调用类的静态方法
+		
+//		acount.drawing3(money);
+		
+		acount.drawing5(money, acount);
+	}
+	
+}
+
+----------------------------------------------------
+//生产者(Productor)将产品交给店员(Clerk)，而消费者(Customer)从店员处取走产品，店员一次只能持有固定数量的产品(比如:20）
+//如果生产者试图生产更多的产品，店员会叫生产者停一下
+//如果店中有空位放产品了再通知生产者继续生产
+//如果店中没有产品了，店员会告诉消费者等一下
+//如果店中有产品了再通知消费者来取走产品。
+//这里可能出现两个问题：
+//	生产者比消费者快时，消费者会漏掉一些数据没有取到。
+//	消费者比生产者快时，消费者会取相同的数据。
+package date20200710;
+
+/**
+ * 生产者与消费者
+ * @author lby
+ *
+ */
+public class Test3 {
+	public static void main(String[] args) {
+		Clerk c = new Clerk();
+		//消费时不生产，生产时不消费
+		
+		//生产者
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				synchronized (c) {
+					while(true){//无限循环代表无限的生产次数
+						if(c.productNum == 0){//产品数为0，开始生产
+							System.out.println("产品数为0，开始生产");
+							while(c.productNum < 4){
+								c.productNum++;//增加产品
+								System.out.println("库存：" + c.productNum);
+							}
+							System.out.println("产品数为" + c.productNum + "，结束生产");
+							
+							c.notify();//唤醒消费者线程
+						}else{
+							try {
+								c.wait();//生产者线程等待
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		}, "生产者").start();
+		
+		//消费者
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				synchronized (c) {
+					while(true){//无限循环代表无限的消费次数
+						if(c.productNum == 4){//产品数为4，开始消费
+							System.out.println("产品数为4，开始消费");
+							while(c.productNum > 0){
+								c.productNum--;//消费产品
+								System.out.println("库存：" + c.productNum);
+							}
+							System.out.println("产品数为" + c.productNum + "，结束消费");
+							
+							c.notify();//唤醒生产者线程
+						}else{
+							try {
+								c.wait();//消费者线程等待
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		}, "消费者").start();
+		
+	}
+}
+
+
+class Clerk{
+	public static int productNum = 0;
+}

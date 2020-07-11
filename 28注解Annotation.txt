@@ -1,0 +1,137 @@
+/*注解Annotation*/
+//从 JDK 5.0 开始, Java 增加了对元数据(MetaData) 的支持, 也就是 Annotation(注释)
+//Annotation 其实就是代码里的特殊标记, 这些标记可以在编译, 类加载, 运行时被读取, 并执行相应的处理. 通过使用 Annotation, 程序员可以在不改变原有逻辑的情况下, 在源文件中嵌入一些补充信息.
+//Annotation 可以像修饰符一样被使用, 可用于修饰包,类, 构造器, 方法, 成员变量, 参数, 局部变量的声明, 这些信息被保存在 Annotation 的 “name=value” 对中.
+//Annotation 能被用来为程序元素(类, 方法, 成员变量等) 设置元数据
+//使用 Annotation 时要在其前面增加 @ 符号, 并把该 Annotation 当成一个修饰符使用. 用于修饰它支持的程序元素
+//三个基本的 Annotation:
+//@Override: 限定重写父类方法, 该注释只能用于方法
+//@Deprecated: 用于表示某个程序元素(类, 方法等)已过时
+//@SuppressWarnings: 抑制编译器警告. 
+//实例讲解
+public class Test4 {
+	public static void main(String[] args) {
+		
+		new TestB().test1();
+		@SuppressWarnings("unused")
+		int i ;
+	}
+}
+
+class TestA{
+	public void test() {
+		
+	}
+}
+
+
+class TestB extends TestA{
+	@Override
+	public void test() {
+		// TODO Auto-generated method stub
+		super.test();
+	}
+	
+	@Deprecated
+	public void test1() {
+		
+	}
+}
+
+
+/*自定义注解*/
+//仅作了解 
+//实例讲解
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+public class Test4 {
+	public static void main(String[] args) {
+		
+	}
+}
+class TestA{
+	public void test() {
+		
+	}
+}
+class TestB extends TestA{
+	
+	@TestAnn(id= 100,desc="姓名")
+	String name;
+	
+	@Override
+	public void test() {
+		// TODO Auto-generated method stub
+		super.test();
+	}
+	
+}
+
+@Target(ElementType.FIELD)//这个注解类是给其他类的属性做注解
+@Retention(RetentionPolicy.RUNTIME)//定义注解的生命周期
+@Documented//注解放到doc文档中
+@interface TestAnn{
+	public int id() default 0;//当注解不填的时候默认值为0
+	
+	public String desc() default "";//当注解不填的时候字符串默认值为空
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

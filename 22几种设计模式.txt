@@ -1,0 +1,108 @@
+ /*工厂模式*/
+ //在真正的开发中 都是合作开发  每个开发人员写部分代码  大家集合在一起就是一个项目
+ 
+ //BWM.java文件
+ /**
+ * 宝马车的产品接口
+ * @author l5113
+ *
+ */
+public interface BWM {
+	//产品的信息介绍  
+	//车的发动方式
+	//等等
+	void showInfo();
+}
+/**
+ * 构建具体的宝马车的类
+ * @author l5113
+ *
+ */
+class BWM3 implements BWM{
+
+	@Override
+	public void showInfo() {
+		// TODO Auto-generated method stub
+		System.out.println("这个是宝马3系车");
+	}
+	
+}
+class BWM5 implements BWM{
+
+	@Override
+	public void showInfo() {
+		// TODO Auto-generated method stub
+		System.out.println("这个是宝马5系车");
+	}
+	
+}
+class BWM7 implements BWM{
+
+	@Override
+	public void showInfo() {
+		// TODO Auto-generated method stub
+		System.out.println("这个是宝马7系车");
+	}
+	
+}
+//BWMFactory.java文件
+/**
+ * 汽车生产工厂接口
+ * @author l5113
+ *
+ */
+public interface BWMFactory {
+	BWM productBWM();
+}
+/**
+ * 实现具体宝马车的工厂
+ * @author l5113
+ *
+ */
+class BWMFactory3 implements BWMFactory{
+
+	@Override
+	public BWM productBWM() {
+		// TODO Auto-generated method stub
+		System.out.println("生产宝马3系车");
+		return new BWM3();
+	}
+	
+}
+class BWMFactory5 implements BWMFactory{
+
+	@Override
+	public BWM productBWM() {
+		// TODO Auto-generated method stub
+		System.out.println("生产宝马5系车");
+		return new BWM3();
+	}
+	
+}
+class BWMFactory7 implements BWMFactory{
+
+	@Override
+	public BWM productBWM() {
+		// TODO Auto-generated method stub
+		System.out.println("生产宝马7系车");
+		return new BWM3();
+	}
+	
+}
+//Test2.Java文件
+public class Test2 {
+	public static void main(String[] args) {
+		//这是开发人员B的工作
+		BWM b3 = new BWMFactory3().productBWM();
+		b3.showInfo();
+		BWM b5 = new BWMFactory5().productBWM();
+		b5.showInfo();
+		BWM b7 = new BWMFactory7().productBWM();
+		b7.showInfo();
+		
+	}
+}
+
+ 
+ 
+ 

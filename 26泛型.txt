@@ -1,0 +1,267 @@
+/*泛型*/
+//泛型，JDK1.5新加入的，解决数据类型的安全性问题，其主要原理是在类声明时通过一个标识表示类中某个属性的类型或者是某个方法的返回值及参数类型。这样在类声明或实例化时只要指定好需要的具体的类型即可。
+//示例
+import java.util.ArrayList;
+import java.util.List;
+
+public class Test {
+	public static void main(String[] args) {
+		List list = new ArrayList();
+		list.add(111);
+		list.add("ddd");
+		list.add(true);
+		
+		//需求 只能在集合中存字符串
+		List<String> list2 =new ArrayList<String>();
+		list2.add("asfd");
+//		list2.add(1);//报错
+	}
+}
+
+/*泛型类*/
+import java.util.ArrayList;
+import java.util.List;
+
+public class Test {
+	public static void main(String[] args) {
+		A<String> a1= new A<String>();//new A的对象时已经指定泛型的类型是string
+		a1.setKey("sssss");//对象使用的setKey(T key)方法中的key形参就是String类型
+		String string = a1.getKey();//setKey(T key) 返回值就由new对象确定返回值为String
+
+		A<Integer> a2= new A<Integer>();
+		a2.setKey(111);//对象使用的setKey(T key)方法中的key形参就是Integer类型
+		Integer i = a2.getKey();//setKey(T key) 返回值就由new对象确定返回值为Integer
+		
+		A a3 =new A();//不指定泛型 相当于制定了一个Object类型
+//		A<Object> a31 = new A<Object>();
+		a3.setKey(new Object());
+		Object object = a3.getKey();
+		
+		//同一个类的不同泛型对象不能互相赋值
+	}
+}
+/**
+ * 此处的泛型T可以任意取名，一般使用大写T,意为type 
+ * @author l5113
+ *
+ * @param <T>
+ */
+class A<T>{
+	private T key;
+	
+	public void setKey(T key) {
+		this.key=key;
+	}
+	
+	public T getKey(){
+		return this.key;
+	}
+}
+
+
+/*泛型接口*/
+//实例讲解
+public class Test1 {
+	public static void main(String[] args) {
+		//未传入泛型实参时，实例化对象时需要添加泛型
+		B1<Object> b1=new B1<Object>();
+		B1<String> b2=new B1<String>();
+		
+		//B2类实现接口时，接口已经传入具体的数据类型，那么就不需要添加泛型
+		B2 b3 = new B2();
+		
+	}
+}
+
+interface IB<T>{
+	T test(T t);
+}
+//未传入泛型实参时，与泛型类的定义相同，在声明类的时候，需将泛型的声明也一起加到类中
+//即：class FruitGenerator<T> implements Generator<T>{
+//如果不声明泛型，如：class FruitGenerator implements Generator<T>，编译器会报错："Unknown class"
+class B1<T> implements IB<T>{
+
+	@Override
+	public T test(T t) {
+		// TODO Auto-generated method stub
+		return t;
+	}
+	
+}
+
+/**
+ * 如果实现接口时指定接口的泛型的具体数据类型
+ * 这个类实现接口所有方法的位置都要把泛型替换成具体的数据类型
+ * @author l5113
+ *
+ */
+class B2 implements IB<String>{
+
+	@Override
+	public String test(String t) {
+		return null;
+	}
+	
+}
+
+
+/*泛型方法*/
+//实例讲解
+
+public class Test1 {
+	public static void main(String[] args) {
+		//泛型方法在调用之前没有固定的数值类型
+		//在调用时传入的参数时什么类型 就会把泛型改成什么类型
+		Cc<Object> c =new Cc<Object>();
+		c.test("sdf");
+		Integer integer1=c.test1(2);
+		boolean boolean1=c.test1(true);
+	}
+}
+
+class Cc<E>{
+	private E e;
+	
+	/**
+	 * 静态方法的泛型定义
+	 * @param t
+	 */
+	//在静态方法中不能使用类定义的泛型
+	//如果要使用泛型，那么只能使用静态方法自己定义的泛型
+	public static <T> void test3(T t) {
+//		System.out.println(this.e);//报错
+		System.out.println(t);
+	}
+	/**
+	 * 无返回值的泛型方法
+	 * @param s
+	 */
+	public <T> void test(T s) {
+		//在类上定义的泛型，可以在普通方法中调用
+		System.out.println(this.e);
+		T t=s;	
+	}
+	
+	/**
+	 * 有返回值时的泛型方法
+	 * @param s
+	 * @return
+	 */
+	public <T> T test1(T s){
+		return s;
+	}
+	
+	/**
+	 * 形参为可变参数的泛型方法
+	 * @param strs
+	 */
+	public <T> void test2(T...strs) {
+		for (T s : strs) {
+			System.out.println(s);
+		}
+	}
+}
+
+/*泛型通配符*/
+//实例讲解
+import java.util.ArrayList;
+import java.util.List;
+
+public class Test2 {
+	public static void main(String[] args) {
+		Dd dd = new Dd();
+		List<String> list= new ArrayList<String>();
+		dd.test(list);
+	}
+}
+
+class Dd{
+	public void test(List<?> list ) {//test方法需要一个list集合的参数，不确定集合中到底存什么类型的数据
+		
+	}
+}
+
+
+//有限制的通配符
+//实例讲解
+import java.util.ArrayList;
+import java.util.List;
+
+public class Test2 {
+	public static void main(String[] args) {
+		Dd dd = new Dd();
+		List<String> list= new ArrayList<String>();
+		dd.test(list);
+		//只允许泛型为C1及C1子类的引用调用
+		List<C1> list1= new ArrayList<C1>();
+		List<D1> list2= new ArrayList<D1>();
+		dd.test1(list1);
+		dd.test1(list2);
+		//只允许泛型为C1及C1父类的引用调用
+		List<C1> list3= new ArrayList<C1>();
+		List<B1> list4= new ArrayList<B1>();
+		List<A1> list5= new ArrayList<A1>();
+		dd.test2(list3);
+		dd.test2(list4);
+		dd.test2(list5);
+		//只允许泛型为实现IA接口的实现类的引用调用
+		List<IAImp1> list6= new ArrayList<IAImp1>();
+		dd.test3(list6);
+	}
+}
+
+class Dd{
+	public void test(List<?> list ) {//test方法需要一个list集合的参数，不确定集合中到底存什么类型的数据
+		
+	}
+	
+	public void test1(List<? extends C1> list ) {//只允许泛型为C1及C1子类的引用调用
+		
+	}
+	
+	public void test2(List<? super C1> list ) {//只允许泛型为C1及C1父类的引用调用
+		
+	}
+	
+	public void test3(List<? extends IA> list ) {//只允许泛型为实现IA接口的实现类的引用调用
+		
+	}
+}
+
+class A1{}
+
+class B1 extends A1{}
+
+class C1 extends B1{}
+
+class D1 extends C1{}
+
+interface IA{}
+
+class IAImp1 implements IA{}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

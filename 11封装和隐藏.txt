@@ -1,0 +1,8 @@
+//通过private关键字对属性和方法进行封装
+//通过编写public类型的setXxxx()和getXxxx()方法来设置属性和获取属性
+				类内部		同一个包		子类		其他任何地方
+关键字
+private			yes							
+缺省(没有修饰符)yes			yes				 
+protected		yes			yes				yes
+public			yes			yes				yes			yes

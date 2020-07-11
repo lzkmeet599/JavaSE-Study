@@ -1,0 +1,44 @@
+/*for*/
+for(初始化表达式1;布尔值测试表达式;更改表达式){
+	语句块;
+}
+for(i=1;i<100;i++){
+	System.out.println(i)
+}
+
+/*while*/
+[初始化语句;]
+while(布尔值测试表达式){
+	语句块;
+	[更改语句;]
+}
+
+/*do-while*/
+[初始化语句;]
+do{
+	语句块;
+	[更改语句;]
+}while(布尔值测试表达式)//先执行一次再来判断条件。
+
+/*break*/
+{
+	...
+	break;//终止当前整个循环
+	....
+}
+
+/*continue*/
+for(int i=0;i<9;i++){
+	if (i%2==0){
+		continue;//结束当前这次循环，直接进入下一次循环，下面的语句不执行
+	}
+	System.out.println(i);
+}
+
+/*return*/
+for(int i=0;i<9;i++){
+	if (i%2==0){
+		return;//直接结束整个方法。
+	}
+	System.out.println(i);
+}

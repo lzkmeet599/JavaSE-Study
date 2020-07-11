@@ -1,0 +1,423 @@
+/*HashSet*/
+//HashSet 是 Set 接口的典型实现，大多数时候使用 Set 集合时都使用这个实现类。我们大多数时候说的set集合指的都是HashSet
+//HashSet 按 Hash 算法来存储集合中的元素，因此具有很好的存取和查找性能。
+//HashSet 具有以下特点：
+//   不能保证元素的排列顺序
+//---当向 HashSet 集合中存入一个元素时，HashSet 会调用该对象的 hashCode() 方法来得到该对象的 hashCode 值-----
+//-----然后根据 hashCode 值决定该对象在 HashSet 中的存储位置。
+//   不可重复------指的是hashcode不相同
+//   HashSet 不是线程安全的
+//   集合元素可以使 null
+//HashSet 集合判断两个元素相等的标准：两个对象通过 equals() 方法比较相等，并且两个对象的 hashCode() 方法返回值也相等。
+//如果两个对象通过 equals() 方法返回 true，这两个对象的 hashCode 值也应该相同。
+//示例
+import java.util.HashSet;
+import java.util.Set;
+
+public class Test3 {
+	public static void main(String[] args) {
+		Set set = new HashSet();
+		set.add(1);//添加元素
+		set.add("a");
+		System.out.println(set);
+		set.remove(1);//移除元素
+		System.out.println(set);
+		System.out.println(set.contains(1));//判断是否包含元素
+		set.clear();//清空元素
+	}
+}
+
+
+//遍历元素
+import java.util.HashSet;
+import java.util.Set;
+public class Test3 {
+	public static void main(String[] args) {
+		Set set = new HashSet();
+		set.add("a");
+		set.add("b");
+		set.add("c");
+		set.add("d");
+		set.add("d");//set集合存的值是不重复的
+		set.add(null);//可以存null
+		System.out.println(set);
+		//使用迭代器遍历集合
+		Iterator it =set.iterator();
+		while (it.hasNext()) {
+			System.out.println(it.next());
+		}
+		//for each迭代集合
+		for(Object obj:set) {//把set的每一个值取出来赋值给obj，知道循环set的所有值
+			System.out.println(obj);
+		}
+		System.out.println(set.size());//获取集合的元素个数
+	}
+}
+//输出
+//[null, a, b, c, d]
+//null
+//a
+//b
+//c
+//d
+//null
+//a
+//b
+//c
+//d
+//5
+
+//如果想要让集合只存同样类型的对象，怎么做？
+//使用泛型
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+public class Test3 {
+	public static void main(String[] args) {
+		Set set = new HashSet();
+		Set<Object> set2=new HashSet<Object>();//与上面的等价
+		//如果想要让集合只存同样类型的对象，怎么做？
+		//使用泛型
+		Set<String> set1 = new HashSet<String>();
+		set1.add("abc");
+		set1.add(null);
+		
+	}
+}
+
+/*TreeSet*/
+//TreeSet 是 SortedSet 接口的实现类，TreeSet 可以确保集合元素处于排序状态。
+//TreeSet 支持两种排序方法：自然排序和定制排序。默认情况下，TreeSet 采用自然排序。
+//示例
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class Test4 {
+	public static void main(String[] args) {
+		Set<Integer> set=new TreeSet<Integer>();
+		//TreeSet的自然排序
+		set.add(5);
+		set.add(2);
+		set.add(4);
+		set.add(3);
+		System.out.println(set);
+		set.remove(5);
+		set.contains(3);
+		set.clear();
+		//使用迭代器遍历集合
+		Iterator<Integer> it =set.iterator();
+		while (it.hasNext()) {
+			System.out.println(it.next());
+		}				
+		//for each迭代集合  推荐这种
+		for(Integer i:set) {//把set的每一个值取出来赋值给i，知道循环set的所有值				
+			System.out.println(i);
+		}
+	}
+}
+//定制排序
+//示例 按照对象的某个属性进行排序
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class Test4 {
+	public static void main(String[] args) {
+		Person p1 =new Person("张三",23);
+		Person p2 =new Person("李四",27);
+		Person p3 =new Person("王五",24);
+		Person p4 =new Person("lucy",13);
+		Set<Person> set=new TreeSet<Person>(new Person());
+		set.add(p1);
+		set.add(p2);
+		set.add(p3);
+		set.add(p4);
+		for(Person i:set) {//把set的每一个值取出来赋值给i，知道循环set的所有值		
+			
+			System.out.println(i.name+"     "+i.age);
+		}
+	}
+}
+class Person implements Comparator<Person>{//把person对象存到treeset中并且按照年龄排序
+	int age;
+	String name;
+	public Person() {
+		
+	}
+	public Person(String name,int age) {
+		this.name=name;
+		this.age= age;
+	}
+	@Override
+	public int compare(Person o1, Person o2) {
+		// TODO Auto-generated method stub
+		if (o1.age>o2.age) {//正序排列 倒序改变大于小于号即可
+			return 1;
+		}else if (o1.age<o2.age) {
+			return -1;
+		}else {
+			return 0;
+		}
+	}
+}
+
+/*List与ArraryList*/
+//ArraryList是list接口的一个实现
+//List 代表一个元素有序、且可重复的集合，集合中的每个元素都有其对应的顺序索引
+//List 允许使用重复元素，可以通过索引来访问指定位置的集合元素。
+//List 默认按元素的添加顺序设置元素的索引。
+//List 集合里添加了一些根据索引来操作集合元素的方法
+//
+//示例
+import java.util.ArrayList;
+import java.util.List;
+
+public class Test5 {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<String>();
+		//添加元素
+		list.add("b");//第一个，索引下标是0
+		list.add("d");//索引下标1
+		list.add("c");//索引下标2
+		list.add("a");//索引下标3
+		list.add("d");//List 允许使用重复元素，可以通过索引来访问指定位置的集合元素。
+		System.out.println(list);
+		System.out.println(list);//默认按元素的添加顺序设置元素的索引。
+		
+		list.add(1,"f");//在指定下标的位置插入数据
+		System.out.println(list);
+		
+		List<String> l = new ArrayList<String>();
+		l.add("123");
+		l.add("456");
+		
+		list.addAll(2,l);//在指定索引位置插入集合
+		System.out.println(list);
+		System.out.println(list.indexOf("d"));//获取指定元素在集合中第一次出现的索引下标
+		System.out.println(list.lastIndexOf("d"));//获取指定元素在集合中最后一次出现的索引下标
+		
+		list.remove(2);//根据指定的索引下标移除数据
+		System.out.println(list);
+		
+		list.set(1, "ff");//根据指定的索引下标修改数据
+		System.out.println(list);
+		
+		//根据索引下标的起始位置截取一段元素形成一个新的集合，元素索引下标
+		List<String> sublist = list.subList(2, 4);//截取的时候包含开始的索引，不包含结束时的索引（左闭右开）
+		System.out.println(sublist);
+		
+		System.out.println(list.size());//集合的长度
+		
+	}
+}
+
+/*Map集合接口和hashmap集合*/
+//Map 用于保存具有映射关系的数据，因此 Map 集合里保存着两组值，一组值用于保存 Map 里的 Key，另外一组用于保存 Map 里的 Value
+//Map 中的 key和value 都可以是任何引用类型的数据
+//Map 中的 Key 不允许重复，即同一个 Map 对象的任何两个 Key 通过 equals 方法比较中返回 false
+//Key 和 Value 之间存在单向一对一关系，即通过指定的 Key 总能找到唯一的，确定的 Value。
+//示例
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+public class Test6 {
+	public static void main(String[] args) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("b", 1);//添加元素
+		map.put("c", 2);
+		map.put("e", 2);
+		System.out.println(map);
+		
+		System.out.println(map.get("b"));//根据key取值
+		
+		map.remove("c");//根据key移除键值对
+		System.out.println(map);
+		
+		System.out.println(map.size());//集合长度
+	
+		System.out.println(map.containsKey("a"));//判断当前map集合时候包含key"a"
+		
+		System.out.println(map.containsValue(10));//判断当前map集合时候包含value 10
+		
+		map.values();//获取集合的value值
+		
+//		map.clear();//清空集合
+				
+		//遍历map集合 通过map.keySet()
+		Set<String> keys =map.keySet();//获取map集合的key集合
+		for (String key : keys) {
+			System.out.println("key:"+key+", value:"+map.get(key));
+		}
+		
+		//遍历map集合 通过map.entrySet()
+		Set<Entry<String, Integer>> entries = map.entrySet();
+		for(Entry<String, Integer> en:entries) {
+			System.out.println("key:"+en.getKey()+", value:"+en.getValue());
+		}
+	}
+}
+
+/*TreeMap*/
+//TreeMap 存储 Key-Value 对时，需要根据 Key 对 key-value 对进行排序。TreeMap 可以保证所有的 Key-Value 对处于有序状态。
+//自然排序：TreeMap 的所有的 Key 必须实现 Comparable 接口，而且所有的 Key 应该是同一个类的对象，否则将会抛出 ClasssCastException
+//示例
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+public class Test6 {
+	public static void main(String[] args) {
+		//TreeMap自然排序是字典排序
+		Map<Integer, String> map = new TreeMap<Integer, String>();
+		map.put(4,"a");
+		map.put(3,"a");
+		map.put(2,"a");
+		map.put(1,"a");
+		System.out.println(map);
+		
+		Map<String, String> map1 = new TreeMap<String, String>();
+		map1.put("b","a");
+		map1.put("c","a");
+		map1.put("d","a");
+		map1.put("a","a");
+		System.out.println(map1);
+		}
+	}
+}
+
+/*操作集合的工具类：Collections*/
+//Collections 是一个操作 Set、List 和 Map 等集合的工具类
+//Collections 中提供了大量方法对集合元素进行排序、查询和修改等操作，还提供了对集合对象设置不可变、对集合对象实现同步控制等方法
+//方法示例
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class Test7 {
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<String>();
+		list.add("b");
+		list.add("cd");
+		list.add("ca");
+		list.add("a");
+		list.add("1");
+		System.out.println(list);
+		Collections.reverse(list);//反转list集合元素的顺序
+		System.out.println(list);
+		
+		Collections.shuffle(list);//随机排序
+		System.out.println(list);
+		
+		Collections.sort(list);//升序排列
+		System.out.println(list);
+		
+		Collections.swap(list, 0, 4);//将指定 list 集合中的 i 处元素和 j 处元素进行交换
+		System.out.println(list);
+		
+		System.out.println(Collections.max(list));//根据元素的自然顺序，返回给定集合中的最大元素
+		System.out.println(Collections.min(list));//根据元素的自然顺序，返回给定集合中的最小元素
+		
+		System.out.println(Collections.frequency(list, "cd"));//返回指定集合中指定元素的出现次数
+		
+		Collections.replaceAll(list, "a", "aa");//使用新值替换 List 对象的所有旧值
+	}
+}
+
+//排序操作示例  按学生的年龄进行排序
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class Test7 {
+	public static void main(String[] args) {		
+		Student student1 =new Student(14,"张三");
+		Student student2=new Student(9,"李四");
+		Student student3 =new Student(55,"王五");
+		Student student4 =new Student(11,"小米");
+		List<Student> list = new ArrayList<Student>();
+		list.add(student1);
+		list.add(student2);
+		list.add(student3);
+		list.add(student4);
+		
+		Student student5=Collections.max(list, new Student());
+		System.out.println(student5.name+"  "+student5.age);//输出年龄最大的学生
+		Student student6 = Collections.min(list, new Student());
+		System.out.println(student6.name+"  "+student6.age);//输出年龄最小的学生
+		
+		for (Student student : list) {
+			System.out.println(student.name+","+student.age);
+		}
+		System.out.println("-----------------------------------");
+		Collections.sort(list, new Student());
+		for (Student student : list) {
+			System.out.println(student.name+","+student.age);
+		}
+	}
+}
+class Student implements Comparator<Student>{
+	int  age;
+	String name;
+	public Student() {
+		// TODO Auto-generated constructor stub
+	}
+	public Student(int age, String name) {
+		this.age = age;
+		this.name=name;
+	}
+	@Override
+	public int compare(Student o1, Student o2) {
+		// TODO Auto-generated method stub
+		if(o1.age>o2.age) {//按年龄升序排序
+			return 1;
+		}else if (o1.age<o2.age) {
+			return -1;
+		}else {
+			return 0;
+		}
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,127 @@
+/*枚举类*/
+//在某些情况下，一个类的对象是有限而且固定的。例如季节类，只能有 4 个对象
+//手动实现枚举类：
+//private 修饰构造器
+//属性使用 private final 修饰
+//把该类的所有实例都使用 public static final 来修饰
+//实例讲解
+public class Test3 {
+	public static void main(String[] args) {
+		//Season.SPRING这段执行的就是获取一个Season的对象
+		Season.SPRING.showInfo();
+		Season.SUMMER.showInfo();
+		Season.AUTUMN.showInfo();
+		Season.WINTER.showInfo();
+		
+		Season spring =Season.SPRING;
+		Season spring1= Season.SPRING;
+		//每次执行Season.SPRING获得的是相同的对象，枚举类中每一个枚举都是单例模式
+		System.out.println(spring.equals(spring1));//返回true
+	}
+}
+
+enum Season{
+	SPRING("春天","春暖花开"),//调用的是下面的有参私有构造方法，括号里的是在给构造方法传参
+	SUMMER("夏天","炎炎夏日"),
+	AUTUMN("秋天","秋高气爽"),
+	WINTER("冬天","寒风凛冽");
+	
+	private final String name;
+	private final String desc;
+	
+	private  Season(String name,String desc) {
+		this.desc=desc;
+		this.name=name;
+	}
+	
+	public void showInfo(){
+		System.out.println(this.name+":"+this.desc);
+	}
+}
+
+
+/*枚举类实现接口*/
+
+public class Test3 {
+	public static void main(String[] args) {
+		spring.test();
+	}
+}
+
+enum Season implements ITest {
+	SPRING("春天","春暖花开"),//调用的是下面的有参私有构造方法，括号里的是在给构造方法传参
+	SUMMER("夏天","炎炎夏日"),
+	AUTUMN("秋天","秋高气爽"),
+	WINTER("冬天","寒风凛冽");
+	
+	private final String name;
+	private final String desc;
+	
+	private  Season(String name,String desc) {
+		this.desc=desc;
+		this.name=name;
+	}
+	
+	public void showInfo(){
+		System.out.println(this.name+":"+this.desc);
+	}
+
+	@Override
+	public void test() {
+		// TODO Auto-generated method stub
+		System.out.println("这是一个ITest接口的test实现方法");
+	}
+}
+
+interface ITest{
+	void test();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

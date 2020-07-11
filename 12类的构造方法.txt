@@ -1,0 +1,77 @@
+/*构造方法的定义*/
+//默认的构造方法前面有没有访问的修饰符与定义的类有关，类是public的，默认的构造方法就是public
+public class Person{
+	public Person(){
+		
+	}
+}
+class T0{
+	T0(){
+		
+	}
+}
+//如果显示定义了构造方法，那么就不会调用隐式构造方法
+public class Person{
+	public Person(){//定义属性的初始值
+		age=1;
+		name="zhangsan"
+	}
+	public int age ;
+	public String name ;	
+}
+
+public class Person{
+	//需要自己决定属性的值时可以给构造函数传参
+	public Person(int a ;String b){//声明对象 Person person =new Person(12,"zhangsan");
+		age=a;
+		name=b;
+	}
+	public int age ;
+	public String name ;	
+} 
+
+/**构造函数重载*/
+public class Person{
+	//重载时对象的创建更加灵活，方便调用方可以灵活的创建出不同需要的对象
+	public Person(){
+		
+	}
+	public Person(int a ;String b){
+		age=a;
+		name=b;
+	}//重载
+	public Person(int a ){
+		age=a;
+	}//重载
+	public Person(String b){
+		name=b;
+	}//重载
+	public int age ;
+	public String name ;	
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

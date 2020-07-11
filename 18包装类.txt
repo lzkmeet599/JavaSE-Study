@@ -1,0 +1,10 @@
+//把8中基本数据类型包装成类
+//用于基本数据类型与字符串之间的转换
+//示例
+		int i= Integer.parseInt("123");
+		float f = Float.parseFloat("0.22");
+		boolean b = Boolean.parseBoolean("true");
+		String istr = String.valueOf(i);
+		String fstr = String.valueOf(f);
+		String bstr = String.valueOf(b);
+		

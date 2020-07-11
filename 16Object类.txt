@@ -1,0 +1,22 @@
+/*Object类*/
+//Object类是所有Java类的最高父类
+public class Test{
+	//问题：无法确定形参是一个什么样的类，可以确定的是传递进来0的实参一定是一个类
+	//解决方案：形参类型用Object来代替
+	public void test(Object obj){
+		
+	}
+	public static void main(String[] atgs){
+		Person p =new Person();
+		Student s = new Student();
+		Test t= new Test();
+		t.test(s);//传递的实参是Student类型
+		t.test(p);//传递的实参是Person类型
+	}
+}
+
+/*Object方法*/
+public Object();//构造函数
+public boolean equals(Object obj);//比较对象是否相等
+public int hashCode();//取hash码
+public String toString();//对象打印时调用，打印出来的是当前引用对象的内存地址

@@ -1,0 +1,193 @@
+//异常：在Java语言中，将程序执行中发生的不正常情况称为“异常”。
+//Java中的异常用于处理非预期的情况，如文件没找到，网络错误，非法的参数
+//Java程序运行过程中所发生的异常事件可分为两类：
+//Error:  JVM系统内部错误、资源耗尽等严重情况
+//Exception: 其它因编程错误或偶然的外在因素导致的一般性问题，例如：
+//空指针访问
+//试图读取不存在的文件
+//网络连接中断
+//异常举例
+public class Test {
+	public static void main(String[] args) {
+		String[] strs = new String[]{"a","b","c"};
+		
+		for(int i =0 ; i<4 ;i++){
+			//java.lang.ArrayIndexOutOfBoundsException 下标越界异常
+			System.out.println(strs[4]);//下标越界异常
+		}
+		A a = null;//在此处，引用变量a没有指向任何对象，什么都没有，自然就没有i的值
+		//java.lang.NullPointerException就会报空指针异常
+		System.out.println(a.i);
+		
+	}
+}
+
+class A{
+	int i ;
+	
+}
+
+
+/*异常处理机制-捕获异常*/
+//使用try体系捕获异常
+//示例 单个catch捕获
+public class Test {
+	public static void main(String[] args) {
+		int i = 0;
+		try {//用try{}来括住可能出现异常的代码块
+			System.out.println(1);
+			System.out.println(3/i);//由于异常，会使下面的代码中断，可以采用异常处理机制来防止程序的中断
+			System.out.println(2);
+			//单个catch捕获
+		}catch (Exception e) {//当不知道捕获的异常是什么类型的异常时  可以直接使用所有异常的父类 Exception
+			// TODO: handle exception
+			//输出异常类型的方式
+			System.out.println(3);
+			e.printStackTrace();
+			System.out.println(e.getStackTrace());
+		}finally {//可写可不写  它是在捕获异常的体系中一定会执行的部分，未来学习io操作和jdbc都会接触到
+			System.out.println(4);
+		}
+		System.out.println("OK!");//如果上面的输出出错，这一个输出就不会执行  使用try体系捕获异常后可以正常输出
+	}
+}
+//示例 多个catch捕获
+public class Test {
+	public static void main(String[] args) {	
+		String[] strs = new String[]{"a","b"};
+		A a = null;
+		//try catch 是为了防止程序可能出现的异常
+		//在捕获异常的代码块中（try{}里的代码块），如果前面的代码块异常了，就不会执行后面的
+		try {
+			System.out.println(strs[2]);
+			System.out.println(a.i);
+		} catch (ArrayIndexOutOfBoundsException e1) {
+			// TODO: handle exception
+			//getMessage( ) 方法，用来得到有关异常事件的信息
+			System.out.println(e1.getMessage());
+			//printStackTrace( )用来跟踪异常事件发生时执行堆栈的内容
+			e1.printStackTrace();
+		}catch (NullPointerException e2) {
+			// TODO: handle exception
+			System.out.println(e2.getMessage());
+			e2.printStackTrace();
+		}
+		System.out.println("=========!");	
+	}
+}
+class A{
+	int i ;
+}
+
+
+/*异常处理机制-抛出异常*/
+//示例
+public class Test1 {
+	public static void main(String[] args) {//可以在main方法这继续抛出异常
+		//main方法抛出异常直接抛到虚拟机上去了  就不能在程序中处理了
+		B b=new B();
+		try {//throws在代码这边抛出的异常，在调用方去捕获处理
+			b.test();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+class B{
+	int i ;
+	public void test() throws Exception {//可以使用throws在代码这边抛出异常，在调用方去捕获处理
+		B b = null ;
+		System.out.println(b.i);
+	}
+}
+
+//重写方法声明抛出异常的原则：子类方法不能抛出比父类方法更大的异常类型
+class B{
+	int i ;
+	public void test() throws NullPointerException {
+		B b = null ;
+		System.out.println(b.i);
+	}
+}
+class C extends B {
+	@Override
+	public void test() throws NullPointerException {
+	//public void test() throws Exception {//子类方法不能抛出比父类方法更大的异常类型
+		// TODO Auto-generated method stub
+		super.test();
+	}
+}
+
+/*人工抛出异常*/
+public class Test1 {
+	public static void main(String[] args) {
+		B b= new B();
+		try {
+			b.test1(-100);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		System.out.println("========");
+	}
+}
+class B{
+	int age;
+	public void test1(int age) throws Exception {
+		if(age>=0&&age<=150){
+			this.age= age;
+			System.out.println("年龄为"+age);
+		}else {
+			throw new Exception("这个年龄不在0-150之间");
+		}
+	}
+}
+
+/*用户自定义异常类*/
+//一般情况下java提供的异常类是够用的
+public class Test1 {
+	public static void main(String[] args) {
+		B b= new B();
+		try {
+			b.test2(-100);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		System.out.println("========");	
+	}
+}
+class B{
+	int age;
+	public void test2(int age) throws MyException {
+		if(age>=0&&age<=150){
+			this.age= age;
+			System.out.println("年龄为"+age);
+		}else {
+			throw new MyException("这个年龄不在0-150之间");
+		}
+	}
+}
+//自定义一个MyException异常类
+class MyException extends Exception{
+	public MyException(String msg) {
+		super(msg);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
